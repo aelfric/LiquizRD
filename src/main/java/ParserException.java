@@ -3,7 +3,10 @@ public class ParserException extends RuntimeException {
     super(s);
   }
 
-  public ParserException(String s, Token lookahead) {
-    super(String.format(s,lookahead.sequence));
+  public ParserException(Token lookahead) {
+    super(String.format("Unexpected token: %s",lookahead.sequence));
+  }
+  public ParserException(Token lookahead, Throwable e) {
+    super(String.format("Unexpected token: %s",lookahead.sequence), e);
   }
 }

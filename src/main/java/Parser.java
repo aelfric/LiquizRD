@@ -61,12 +61,12 @@ public class Parser {
 
     try {
       quiz();
-    } catch (Exception e){
-      throw new ParserException("Unexpected symbol %s", lookahead);
+    } catch (Exception e) {
+      throw new ParserException(lookahead, e);
     }
 
     if (lookahead.token != -1)
-      throw new ParserException("Unexpected symbol %s found", lookahead);
+      throw new ParserException(lookahead);
 
     System.out.println(gson.toJson(quiz));
   }
@@ -78,10 +78,6 @@ public class Parser {
   }
 
   private void question() {
-    if(currentQuestion != null) {
-      quiz.addQuestion(currentQuestion);
-      currentQuestion = null;
-    }
     if (this.lookahead.token == Token.QUESTION) {
       final QuestionDefinition qDef = gson.fromJson(this.lookahead.sequence, QuestionDefinition.class);
       switch (qDef.style) {
@@ -98,17 +94,21 @@ public class Parser {
               Integer.parseInt(qDef.points)
           );
       }
-      if (this.currentQuestion != null) {
-        this.currentQuestion.addElement(
-            this.textLiteral.toString()
-        );
-        textLiteral = new StringBuilder();
-      }
       nextToken();
-      text();
-      input();
+      element();
       delimiter();
     }
+  }
+
+  private void element() {
+    if (lookahead.token != Token.WORD && lookahead.token != Token.DELIMITER) {
+      this.currentQuestion.addElement(
+          this.textLiteral.toString()
+      );
+      textLiteral = new StringBuilder();
+    }
+    text();
+    input();
   }
 
   private void input() {
@@ -120,6 +120,9 @@ public class Parser {
                 lookahead.sequence
             )
         );
+        nextToken();
+        whitespace();
+        element();
         break;
       case Token.MULTI_CHOICE_VERTICAL:
         this.currentQuestion.addElement(
@@ -128,6 +131,9 @@ public class Parser {
                 lookahead.sequence
             )
         );
+        nextToken();
+        whitespace();
+        element();
         break;
       case Token.MULTI_ANSWER_HORIZONTAL:
         this.currentQuestion.addElement(
@@ -136,6 +142,9 @@ public class Parser {
                 lookahead.sequence
             )
         );
+        nextToken();
+        whitespace();
+        element();
         break;
       case Token.MULTI_ANSWER_VERTICAL:
         this.currentQuestion.addElement(
@@ -144,26 +153,57 @@ public class Parser {
                 lookahead.sequence
             )
         );
+        nextToken();
+        whitespace();
+        element();
         break;
       case Token.FILL_IN:
         this.currentQuestion.addElement(
             new FillInQuestion(lookahead.sequence)
         );
+        nextToken();
+        whitespace();
+        element();
+        break;
       case Token.TEXT_QUESTION:
+        this.currentQuestion.addElement(
+            new LongTextQuestion(lookahead.sequence)
+        );
+        nextToken();
+        whitespace();
+        element();
+        break;
       case Token.DEFINITION:
+        this.currentQuestion.addElement(
+            new PredefinedDropDownQuestion(
+                lookahead.sequence,
+                this.quiz.definitions
+            )
+        );
+        nextToken();
+        whitespace();
+        element();
+        break;
       case Token.DROP_DOWN:
+        this.currentQuestion.addElement(
+            new DropDownQuestion(
+                lookahead.sequence
+            )
+        );
+        nextToken();
+        whitespace();
+        element();
+        break;
       case Token.IMAGE:
       case Token.VIDEO:
       case Token.RANDOM_VAR:
       case Token.VARIABLE:
       case Token.FORMULA_QUESTION:
       case Token.MATRIX_QUESTION:
-        // todo - implement me
+        nextToken();
+        whitespace();
+        element();
     }
-    nextToken();
-    whitespace();
-    text();
-    input();
   }
 
   private void text() {
@@ -178,13 +218,17 @@ public class Parser {
     if (this.lookahead.token == Token.WHITESPACE) {
       textLiteral.append(this.lookahead.sequence);
       nextToken();
-      text();
+      element();
     }
   }
 
   private void delimiter() {
     if (this.lookahead.token == Token.DELIMITER) {
       nextToken();
+      if (currentQuestion != null) {
+        quiz.addQuestion(currentQuestion);
+        currentQuestion = null;
+      }
       question();
     }
   }
