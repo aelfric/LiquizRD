@@ -11,7 +11,7 @@ public class LongTextQuestion implements QuestionElement {
     if(matcher.find()) {
       answer = matcher.group(1);
     } else {
-      throw new ParserException("Could not decode fill-in question");
+      this.answer = "";
     }
   }
 }

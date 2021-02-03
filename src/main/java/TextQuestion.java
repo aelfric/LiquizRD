@@ -5,10 +5,13 @@ public class TextQuestion implements Question {
   public final String name;
   public final int points;
   public final List<QuestionElement> elements = new ArrayList<>();
+  public String author;
+  public final String style;
 
-  public TextQuestion(String name, int points) {
+  public TextQuestion(String name, int points, String text) {
     this.name = name;
     this.points = points;
+    this.style = text;
   }
 
   @Override
@@ -19,6 +22,12 @@ public class TextQuestion implements Question {
   @Override
   public void addElement(String text) {
     this.addElement(new TextElement(text));
+  }
+
+  @Override
+  public void setAuthor(String sequence) {
+    final String[] split = sequence.split(":");
+    this.author = split[1].trim();
   }
 
 }

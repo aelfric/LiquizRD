@@ -19,6 +19,7 @@ public class Token {
   static final int FORMULA_QUESTION = 16;
   static final int MATRIX_QUESTION = 17;
   static final int WORD = 18;
+  public static final int AUTHOR = 19;
   public final int token;
   public final String sequence;
 

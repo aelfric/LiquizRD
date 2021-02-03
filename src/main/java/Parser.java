@@ -3,6 +3,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class Parser {
   final Tokenizer tokenizer;
@@ -23,20 +24,21 @@ public class Parser {
     tokenizer.add("\\{\"quizspec[^\\}]*\\}\n", Token.QUIZ_SPEC);
     tokenizer.add("\\{\"style[^\\}]*\\}\n", Token.QUESTION);
     tokenizer.add("---\n", Token.DELIMITER);
-    tokenizer.add("\\$mch:[^\\$]+\\$", Token.MULTI_CHOICE_HORIZONTAL);   //    {"mch", new MultipleChoiceHorizontal()},
-    tokenizer.add("\\$mcv:[^\\$]+\\$", Token.MULTI_CHOICE_VERTICAL);   //    {"mcv", new MultipleChoiceVertical()},
-    tokenizer.add("\\$mah:[^\\$]+\\$", Token.MULTI_ANSWER_HORIZONTAL);   //    {"mah", new MultipleAnswerHorizontal()},
-    tokenizer.add("\\$mav:[^\\$]+\\$", Token.MULTI_ANSWER_VERTICAL);   //    {"mav", new MultipleAnswerVertical()},
+    tokenizer.add("\\$mch:[^\\$]*\\$", Token.MULTI_CHOICE_HORIZONTAL);   //    {"mch", new MultipleChoiceHorizontal()},
+    tokenizer.add("\\$mcv:[^\\$]*\\$", Token.MULTI_CHOICE_VERTICAL);   //    {"mcv", new MultipleChoiceVertical()},
+    tokenizer.add("\\$mah:[^\\$]*\\$", Token.MULTI_ANSWER_HORIZONTAL);   //    {"mah", new MultipleAnswerHorizontal()},
+    tokenizer.add("\\$mav:[^\\$]*\\$", Token.MULTI_ANSWER_VERTICAL);   //    {"mav", new MultipleAnswerVertical()},
     tokenizer.add("\\$f[^\\$]+\\$", Token.FILL_IN);   //    {"f", new FillIn()},
-    tokenizer.add("\\$tar:[^\\$]+\\$", Token.TEXT_QUESTION);   //    {"tar", new TextQuestion()},
-    tokenizer.add("\\$def:[^\\$]+\\$", Token.DEFINITION);   //    {"def", new Definition()},
-    tokenizer.add("\\$dro:[^\\$]+\\$", Token.DROP_DOWN);   //    {"dro", new DropDownQuestion()},
-    tokenizer.add("\\$img:[^\\$]+\\$", Token.IMAGE);   //    {"img", new Image()},
-    tokenizer.add("\\$vid:[^\\$]+\\$", Token.VIDEO);   //    {"vid", new Video()},
-    tokenizer.add("\\$rnd:[^\\$]+\\$", Token.RANDOM_VAR);   //    {"rnd", new RandomVar()},
-    tokenizer.add("\\$var:[^\\$]+\\$", Token.VARIABLE);   //    {"var", new Variable()},
-    tokenizer.add("\\$for:[^\\$]+\\$", Token.FORMULA_QUESTION);   //    {"for", new FormulaQuestion()},
-    tokenizer.add("\\$mat:[^\\$]+\\$", Token.MATRIX_QUESTION);   //    {"mat", new MatrixQuestion()}
+    tokenizer.add("\\$tar:[^\\$]*\\$", Token.TEXT_QUESTION);   //    {"tar", new TextQuestion()},
+    tokenizer.add("\\$def:[^\\$]*\\$", Token.DEFINITION);   //    {"def", new Definition()},
+    tokenizer.add("\\$dro:[^\\$]*\\$", Token.DROP_DOWN);   //    {"dro", new DropDownQuestion()},
+    tokenizer.add("\\$img:[^\\$]*\\$", Token.IMAGE);   //    {"img", new Image()},
+    tokenizer.add("\\$vid:[^\\$]*\\$", Token.VIDEO);   //    {"vid", new Video()},
+    tokenizer.add("\\$rnd:[^\\$]*\\$", Token.RANDOM_VAR);   //    {"rnd", new RandomVar()},
+    tokenizer.add("\\$var:[^\\$]*\\$", Token.VARIABLE);   //    {"var", new Variable()},
+    tokenizer.add("\\$for:[^\\$]*\\$", Token.FORMULA_QUESTION);   //    {"for", new FormulaQuestion()},
+    tokenizer.add("\\$mat:[^\\$]*\\$", Token.MATRIX_QUESTION);   //    {"mat", new MatrixQuestion()}
+    tokenizer.add("^author:[A-Za-z ]+\n", Token.AUTHOR);   //    {"mat", new MatrixQuestion()}
     tokenizer.add("[^\\s]+", Token.WORD);
   }
 
@@ -80,21 +82,19 @@ public class Parser {
   private void question() {
     if (this.lookahead.token == Token.QUESTION) {
       final QuestionDefinition qDef = gson.fromJson(this.lookahead.sequence, QuestionDefinition.class);
-      switch (qDef.style) {
-        case "def":
-          quiz.addDefinition(
-              qDef.name,
-              new Definition(qDef.values.split(","))
-          );
-          break;
-        case "text":
-        default:
-          this.currentQuestion = new TextQuestion(
-              qDef.name,
-              Integer.parseInt(qDef.points)
-          );
+      if ("def".equals(qDef.style)) {
+        quiz.addDefinition(
+            qDef.name,
+            new Definition(qDef.values.split(","))
+        );
+      } else {
+        this.currentQuestion = new TextQuestion(
+            qDef.name,
+            Integer.parseInt(qDef.points), qDef.style
+        );
       }
       nextToken();
+      author();
       element();
       delimiter();
     }
@@ -111,99 +111,56 @@ public class Parser {
     input();
   }
 
-  private void input() {
-    switch (lookahead.token) {
-      case Token.MULTI_CHOICE_HORIZONTAL:
-        this.currentQuestion.addElement(
-            new MultipleChoiceQuestion(
-                "horizontal",
-                lookahead.sequence
-            )
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.MULTI_CHOICE_VERTICAL:
-        this.currentQuestion.addElement(
-            new MultipleChoiceQuestion(
-                "vertical",
-                lookahead.sequence
-            )
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.MULTI_ANSWER_HORIZONTAL:
-        this.currentQuestion.addElement(
-            new MultipleChoiceQuestion(
-                "horizonal",
-                lookahead.sequence
-            )
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.MULTI_ANSWER_VERTICAL:
-        this.currentQuestion.addElement(
-            new MultipleChoiceQuestion(
-                "vertical",
-                lookahead.sequence
-            )
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.FILL_IN:
-        this.currentQuestion.addElement(
-            new FillInQuestion(lookahead.sequence)
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.TEXT_QUESTION:
-        this.currentQuestion.addElement(
-            new LongTextQuestion(lookahead.sequence)
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.DEFINITION:
-        this.currentQuestion.addElement(
-            new PredefinedDropDownQuestion(
-                lookahead.sequence,
-                this.quiz.definitions
-            )
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.DROP_DOWN:
-        this.currentQuestion.addElement(
-            new DropDownQuestion(
-                lookahead.sequence
-            )
-        );
-        nextToken();
-        whitespace();
-        element();
-        break;
-      case Token.IMAGE:
-      case Token.VIDEO:
-      case Token.RANDOM_VAR:
-      case Token.VARIABLE:
-      case Token.FORMULA_QUESTION:
-      case Token.MATRIX_QUESTION:
-        nextToken();
-        whitespace();
-        element();
+  private void author() {
+    if (lookahead.token == Token.AUTHOR) {
+      this.currentQuestion.setAuthor(lookahead.sequence);
+      nextToken();
     }
+  }
+
+  private void input() {
+    createElement(lookahead)
+        .ifPresent((e) -> {
+          this.currentQuestion.addElement(e);
+          nextToken();
+          whitespace();
+          element();
+        });
+  }
+
+  private Optional<QuestionElement> createElement(Token token) {
+    return switch (token.token) {
+      case Token.MULTI_CHOICE_HORIZONTAL,
+          Token.MULTI_ANSWER_HORIZONTAL -> Optional.of(
+          new MultipleChoiceQuestion(
+              "horizontal",
+              token.sequence
+          ));
+      case Token.MULTI_CHOICE_VERTICAL,
+          Token.MULTI_ANSWER_VERTICAL -> Optional.of(
+          new MultipleChoiceQuestion(
+              "vertical",
+              token.sequence
+          ));
+      case Token.FILL_IN -> Optional.of(new FillInQuestion(token.sequence));
+      case Token.TEXT_QUESTION -> Optional.of(new LongTextQuestion(token.sequence));
+      case Token.DEFINITION -> Optional.of(
+          new PredefinedDropDownQuestion(
+              token.sequence,
+              this.quiz.definitions
+          ));
+      case Token.DROP_DOWN -> Optional.of(
+          new DropDownQuestion(
+              token.sequence
+          ));
+      case Token.IMAGE,
+          Token.VIDEO,
+          Token.RANDOM_VAR,
+          Token.VARIABLE,
+          Token.FORMULA_QUESTION,
+          Token.MATRIX_QUESTION -> Optional.of(new UnknownElement(token));
+      default -> Optional.empty();
+    };
   }
 
   private void text() {
