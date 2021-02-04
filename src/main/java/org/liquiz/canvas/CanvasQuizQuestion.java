@@ -3,6 +3,10 @@ package org.liquiz.canvas;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * See https://canvas.instructure.com/doc/api/quiz_questions.html#method.quizzes/quiz_questions.create
+ */
 public class CanvasQuizQuestion {
   public long id;
   public long quiz_id;
