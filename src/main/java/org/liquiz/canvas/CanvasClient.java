@@ -41,12 +41,16 @@ public class CanvasClient {
     Parser parser = new Parser();
     List<Token> tokens = parser.tokenize(text);
     final Quiz quiz = parser.parse(tokens);
+    final int quizId = Integer.parseInt(prop.getProperty("quiz_id"));
+    final String accessToken = prop.getProperty("access_token");
+    final String courseId = prop.getProperty("course_id");
 
     for (Question question : quiz.questions) {
       final TextQuestion textQuestion = (TextQuestion) question;
 
       final CanvasQuizQuestion canvasQuizQuestion = new CanvasQuizQuestion();
-      canvasQuizQuestion.quiz_id = 52532;
+
+      canvasQuizQuestion.quiz_id = quizId;
       canvasQuizQuestion.question_text = textQuestion.questionText;
       canvasQuizQuestion.question_type = "multiple_answers_question";
       canvasQuizQuestion.points_possible = textQuestion.points;
@@ -64,8 +68,7 @@ public class CanvasClient {
       final Map<String, CanvasQuizQuestion> map = Map.of("question", canvasQuizQuestion);
 
       final Gson gson = new Gson();
-      final String accessToken = prop.getProperty("access_token");
-      final HttpRequest httpRequest = HttpRequest.newBuilder(new URI("https://sit.instructure.com//api/v1/courses/45047/quizzes/52532/questions"))
+      final HttpRequest httpRequest = HttpRequest.newBuilder(new URI("https://sit.instructure.com//api/v1/courses/" + courseId + "/quizzes/" + quizId + "/questions"))
           .header("Authorization", "Bearer " + accessToken)
           .header("Accept", "application/json")
           .header("Content-Type", "application/json")
