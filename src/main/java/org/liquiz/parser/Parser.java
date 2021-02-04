@@ -41,7 +41,7 @@ public class Parser {
     tokenizer.add("\\$for:[^\\$]*\\$", Token.FORMULA_QUESTION);   //    {"for", new FormulaQuestion()},
     tokenizer.add("\\$mat:[^\\$]*\\$", Token.MATRIX_QUESTION);   //    {"mat", new MatrixQuestion()}
     tokenizer.add("^author:[A-Za-z ]+\n", Token.AUTHOR);   //    {"mat", new MatrixQuestion()}
-    tokenizer.add("[^\\s]+", Token.WORD);
+    tokenizer.add("[^\\s$]+", Token.WORD);
   }
 
   private void nextToken() {
@@ -106,13 +106,19 @@ public class Parser {
 
   private void element() {
     if (lookahead.token != Token.WORD && lookahead.token != Token.DELIMITER) {
+      endText();
+    }
+    text();
+    input();
+  }
+
+  private void endText() {
+    if(textLiteral.length() > 0) {
       this.currentQuestion.addElement(
           this.textLiteral.toString()
       );
       textLiteral = new StringBuilder();
     }
-    text();
-    input();
   }
 
   private void author() {
@@ -185,11 +191,12 @@ public class Parser {
 
   private void delimiter() {
     if (this.lookahead.token == Token.DELIMITER) {
-      nextToken();
+      endText();
       if (currentQuestion != null) {
         quiz.addQuestion(currentQuestion);
         currentQuestion = null;
       }
+      nextToken();
       question();
     }
   }

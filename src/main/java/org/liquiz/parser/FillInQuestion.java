@@ -8,7 +8,7 @@ public class FillInQuestion implements QuestionElement {
   public final String answer;
 
   public FillInQuestion(String declaration) {
-    final Pattern compile = Pattern.compile("\\$f(Q\\{\\d+})?:([^$]+)\\$");
+    final Pattern compile = Pattern.compile("\\$fQ*(\\{\\d+})?:([^$]+)\\$");
 
     final Matcher matcher = compile.matcher(declaration);
     if(matcher.find()) {
@@ -20,7 +20,7 @@ public class FillInQuestion implements QuestionElement {
   }
 
   private int decodeLength(String str) {
-    final Pattern compile = Pattern.compile("Q\\{(\\d+)}");
+    final Pattern compile = Pattern.compile("\\{(\\d+)}");
     final Matcher matcher = compile.matcher(str);
     if(matcher.find()) {
       return Integer.parseInt(matcher.group(1));
