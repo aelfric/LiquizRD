@@ -52,7 +52,7 @@ public class CanvasClient {
 
       canvasQuizQuestion.quiz_id = quizId;
       canvasQuizQuestion.question_text = textQuestion.questionText;
-      canvasQuizQuestion.question_type = "multiple_answers_question";
+      canvasQuizQuestion.question_type = QuestionType.multiple_answers_question;
       canvasQuizQuestion.points_possible = textQuestion.points;
 
       final PredefinedMultipleChoice element = (PredefinedMultipleChoice) textQuestion.elements.get(0);

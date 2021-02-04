@@ -9,7 +9,7 @@ public class CanvasQuizQuestion {
   // The order in which the question will be retrieved and displayed.
   public int position;
   public String question_name;
-  public String question_type;
+  public QuestionType question_type;
   public String question_text;
   public int points_possible;
   public String correct_comments;
