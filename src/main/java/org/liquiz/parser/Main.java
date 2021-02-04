@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 import java.util.List;
 
 public class Main {

@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,7 +19,7 @@ public class Parser {
 
   Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-  Parser() {
+  public Parser() {
     this.tokenizer = new Tokenizer();
 
     tokenizer.add("\\s+", Token.WHITESPACE);
@@ -29,9 +31,9 @@ public class Parser {
     tokenizer.add("\\$mah:[^\\$]*\\$", Token.MULTI_ANSWER_HORIZONTAL);   //    {"mah", new MultipleAnswerHorizontal()},
     tokenizer.add("\\$mav:[^\\$]*\\$", Token.MULTI_ANSWER_VERTICAL);   //    {"mav", new MultipleAnswerVertical()},
     tokenizer.add("\\$f[^\\$]+\\$", Token.FILL_IN);   //    {"f", new FillIn()},
-    tokenizer.add("\\$tar:[^\\$]*\\$", Token.TEXT_QUESTION);   //    {"tar", new TextQuestion()},
-    tokenizer.add("\\$def:[^\\$]*\\$", Token.DEFINITION);   //    {"def", new Definition()},
-    tokenizer.add("\\$dro:[^\\$]*\\$", Token.DROP_DOWN);   //    {"dro", new DropDownQuestion()},
+    tokenizer.add("\\$tar:[^\\$]*\\$", Token.TEXT_QUESTION);   //    {"tar", new org.liquiz.parser.TextQuestion()},
+    tokenizer.add("\\$def:[^\\$]*\\$", Token.DEFINITION);   //    {"def", new org.liquiz.parser.Definition()},
+    tokenizer.add("\\$dro:[^\\$]*\\$", Token.DROP_DOWN);   //    {"dro", new org.liquiz.parser.DropDownQuestion()},
     tokenizer.add("\\$img:[^\\$]*\\$", Token.IMAGE);   //    {"img", new Image()},
     tokenizer.add("\\$vid:[^\\$]*\\$", Token.VIDEO);   //    {"vid", new Video()},
     tokenizer.add("\\$rnd:[^\\$]*\\$", Token.RANDOM_VAR);   //    {"rnd", new RandomVar()},
@@ -57,7 +59,7 @@ public class Parser {
     return tokenizer.tokenize(str);
   }
 
-  public void parse(List<Token> tokens) {
+  public Quiz parse(List<Token> tokens) {
     this.tokens = new LinkedList<>(tokens);
     lookahead = this.tokens.get(0);
 
@@ -71,6 +73,7 @@ public class Parser {
       throw new ParserException(lookahead);
 
     System.out.println(gson.toJson(quiz));
+    return quiz;
   }
 
   private void quiz() {
@@ -145,7 +148,7 @@ public class Parser {
       case Token.FILL_IN -> Optional.of(new FillInQuestion(token.sequence));
       case Token.TEXT_QUESTION -> Optional.of(new LongTextQuestion(token.sequence));
       case Token.DEFINITION -> Optional.of(
-          new PredefinedDropDownQuestion(
+          new PredefinedMultipleChoice(
               token.sequence,
               this.quiz.definitions
           ));

@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ public class TextQuestion implements Question {
   public final List<QuestionElement> elements = new ArrayList<>();
   public String author;
   public final String style;
+  public String questionText;
 
   public TextQuestion(String name, int points, String text) {
     this.name = name;
@@ -21,7 +24,11 @@ public class TextQuestion implements Question {
 
   @Override
   public void addElement(String text) {
-    this.addElement(new TextElement(text));
+    if (this.questionText == null && this.elements.isEmpty()){
+      this.questionText = text;
+    } else {
+      this.addElement(new TextElement(text));
+    }
   }
 
   @Override

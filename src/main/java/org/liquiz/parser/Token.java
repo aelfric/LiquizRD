@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 public class Token {
   public static final int EPSILON = -1;
   static final int WHITESPACE = 0;

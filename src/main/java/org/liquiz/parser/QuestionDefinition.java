@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 public class QuestionDefinition {
   public final String style;
   public final String name;

@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 public class QuizSpec {
   public final String quizspec;
   public final String name;

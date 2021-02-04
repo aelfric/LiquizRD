@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 public class UnknownElement implements QuestionElement {
   public final Token token;
 

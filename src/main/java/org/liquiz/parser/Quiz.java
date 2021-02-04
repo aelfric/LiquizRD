@@ -1,3 +1,5 @@
+package org.liquiz.parser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -5,7 +7,7 @@ import java.util.Map;
 
 public class Quiz {
   Map<String, Definition> definitions = new HashMap<>();
-  List<Question> questions = new ArrayList<>();
+  public List<Question> questions = new ArrayList<>();
   private String name;
 
   public void addQuestion(Question question){

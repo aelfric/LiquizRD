@@ -1,0 +1,23 @@
+{"quizspec":"cpe390.qspec", "name":"Demo org.liquiz.parser.Quiz"}
+{"style":"def", "name":"types", "values":" ,byte,char,short,int,long,float,double,boolean,void"}
+---
+{"style":"text", "name":"Data Types", "points":"10"}
+Which of the following are valid data types for the literal <pre>true</pre>?
+$def:types:boolean$
+---
+{"style":"text", "name":"Data Types", "points":"10"}
+Which of the following are valid data types for the literal <pre>1.0</pre>?
+$def:types:float,double$
+---
+{"style":"text", "name":"Data Types", "points":"10"}
+Which of the following are valid data types for the literal <pre>'c'</pre>?
+$def:types:char$
+---
+{"style":"text", "name":"Data Types", "points":"10"}
+Which of the following are valid data types for the literal <pre>1</pre>?
+$def:types:byte,short,int,long,float,double$
+---
+{"style":"text", "name":"Data Types", "points":"10"}
+Which of the following are valid data types for the literal <pre>1L</pre>?
+$def:types:long$
+---
