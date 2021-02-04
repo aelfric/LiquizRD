@@ -65,6 +65,7 @@ public class Parser {
 
     try {
       quiz();
+      this.quiz.addQuestion(this.currentQuestion);
     } catch (Exception e) {
       throw new ParserException(lookahead, e);
     }
