@@ -6,9 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PredefinedMultipleChoice implements QuestionElement {
-  public final List<String> choices;
-  public List<String> answers;
+public class PredefinedMultipleChoice extends ChoiceQuestion implements QuestionElement {
 
   public PredefinedMultipleChoice(
       String sequence,

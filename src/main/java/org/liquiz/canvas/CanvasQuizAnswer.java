@@ -46,4 +46,12 @@ public class CanvasQuizAnswer {
   public int end;
   // Used in fill in multiple blank and multiple dropdowns questions.
   public String blank_id;
+
+  @Override
+  public String toString() {
+    return "CanvasQuizAnswer{" +
+        "answer_text='" + answer_text + '\'' +
+        ", answer_weight=" + answer_weight +
+        '}';
+  }
 }

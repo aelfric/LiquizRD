@@ -59,6 +59,10 @@ public class Parser {
     return tokenizer.tokenize(str);
   }
 
+  public Quiz parse(String inputString){
+    return parse(this.tokenizer.tokenize(inputString));
+  }
+
   public Quiz parse(List<Token> tokens) {
     this.tokens = new LinkedList<>(tokens);
     lookahead = this.tokens.get(0);
@@ -140,18 +144,26 @@ public class Parser {
 
   private Optional<QuestionElement> createElement(Token token) {
     return switch (token.token) {
-      case Token.MULTI_CHOICE_HORIZONTAL,
-          Token.MULTI_ANSWER_HORIZONTAL -> Optional.of(
+      case Token.MULTI_CHOICE_HORIZONTAL -> Optional.of(
           new MultipleChoiceQuestion(
               "horizontal",
-              token.sequence
+              token.sequence, false
           ));
-      case Token.MULTI_CHOICE_VERTICAL,
-          Token.MULTI_ANSWER_VERTICAL -> Optional.of(
+      case Token.MULTI_ANSWER_HORIZONTAL -> Optional.of(
+      new MultipleChoiceQuestion(
+          "horizontal",
+          token.sequence, true
+      ));
+      case Token.MULTI_CHOICE_VERTICAL -> Optional.of(
           new MultipleChoiceQuestion(
               "vertical",
-              token.sequence
+              token.sequence, true
           ));
+      case Token.MULTI_ANSWER_VERTICAL -> Optional.of(
+      new MultipleChoiceQuestion(
+          "vertical",
+          token.sequence, false
+      ));
       case Token.FILL_IN -> Optional.of(new FillInQuestion(token.sequence));
       case Token.TEXT_QUESTION -> Optional.of(new LongTextQuestion(token.sequence));
       case Token.DEFINITION -> Optional.of(

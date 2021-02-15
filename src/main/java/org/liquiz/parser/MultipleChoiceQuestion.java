@@ -1,19 +1,18 @@
 package org.liquiz.parser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MultipleChoiceQuestion implements QuestionElement {
+public class MultipleChoiceQuestion extends ChoiceQuestion{
   public final String style;
-  public final List<String> choices;
-  public final List<String> answers;
+  public final boolean isMultiAnswer;
 
-  public MultipleChoiceQuestion(String style, String sequence) {
+  public MultipleChoiceQuestion(String style, String sequence, boolean isMultiAnswer) {
     this.style = style;
     this.choices = new ArrayList<>();
     this.answers = new ArrayList<>();
+    this.isMultiAnswer = isMultiAnswer;
 
     final Pattern compile = Pattern.compile("\\$[a-z]+:([^$]+)\\$");
     final Matcher matcher = compile.matcher(sequence);

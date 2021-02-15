@@ -10,8 +10,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -39,36 +37,21 @@ public class CanvasClient {
         .lines()
         .collect(Collectors.joining("\n"));
     Parser parser = new Parser();
-    List<Token> tokens = parser.tokenize(text);
-    final Quiz quiz = parser.parse(tokens);
+    final Quiz quiz = parser.parse(text);
     final int quizId = Integer.parseInt(prop.getProperty("quiz_id"));
     final String accessToken = prop.getProperty("access_token");
     final String courseId = prop.getProperty("course_id");
+    final boolean dryRun = Boolean.parseBoolean(prop.getProperty("dry_run"));
 
     for (Question question : quiz.questions) {
-      final TextQuestion textQuestion = (TextQuestion) question;
-
-      final CanvasQuizQuestion canvasQuizQuestion = new CanvasQuizQuestion();
-
-      canvasQuizQuestion.quiz_id = quizId;
-      canvasQuizQuestion.question_text = textQuestion.questionText;
-      canvasQuizQuestion.question_type = QuestionType.multiple_answers_question;
-      canvasQuizQuestion.points_possible = textQuestion.points;
-
-      final PredefinedMultipleChoice element = (PredefinedMultipleChoice) textQuestion.elements.get(0);
-      for (String choice : element.choices) {
-        final CanvasQuizAnswer answer1 = new CanvasQuizAnswer();
-        answer1.answer_text = choice;
-        answer1.answer_weight = element.answers.contains(choice) ?
-            1.0 / element.answers.size() :
-            0.0;
-        canvasQuizQuestion.answers.add(answer1);
-      }
+      final CanvasQuizQuestion canvasQuizQuestion = CanvasQuizQuestion.fromParsedQuestion(quizId, (TextQuestion) question);
 
       final Map<String, CanvasQuizQuestion> map = Map.of("question", canvasQuizQuestion);
 
       final Gson gson = new Gson();
-      final HttpRequest httpRequest = HttpRequest.newBuilder(new URI("https://sit.instructure.com//api/v1/courses/" + courseId + "/quizzes/" + quizId + "/questions"))
+      final HttpRequest httpRequest = HttpRequest.newBuilder(
+          new URI(
+              String.format("https://sit.instructure.com//api/v1/courses/%s/quizzes/%d/questions", courseId, quizId)))
           .header("Authorization", "Bearer " + accessToken)
           .header("Accept", "application/json")
           .header("Content-Type", "application/json")
@@ -76,11 +59,14 @@ public class CanvasClient {
           .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(map)))
           .build();
 
-      HttpResponse<String> response = HttpClient.newBuilder()
-          .build()
-          .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+      if (!dryRun) {
+        HttpResponse<String> response = HttpClient.newBuilder()
+            .build()
+            .send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-      System.out.println(response.body());
+        System.out.println(response.body());
+      }
     }
   }
+
 }
