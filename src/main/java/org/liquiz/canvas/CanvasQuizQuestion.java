@@ -46,21 +46,19 @@ public class CanvasQuizQuestion {
           canvasQuizQuestion.answers.add(answer);
         }
       }
-      case essay_question ->  {
-        canvasQuizQuestion.question_text = question.questionText;
-      }
+      case essay_question -> canvasQuizQuestion.question_text = question.questionText;
       case fill_in_multiple_blanks_question -> {
         int i = 1;
         final StringBuilder questionText = new StringBuilder();
         questionText.append(question.questionText);
         for (QuestionElement element : question.elements) {
-          if(element instanceof TextElement){
-            questionText.append(((TextElement) element).text);
-          } else if (element instanceof FillInQuestion){
+          if(element instanceof TextElement textElement){
+            questionText.append(textElement.text);
+          } else if (element instanceof FillInQuestion fillInQuestion){
             final String blankId = String.format("[blank_%d]", i++);
             questionText.append(blankId);
             final CanvasQuizAnswer answer = new CanvasQuizAnswer();
-            answer.answer_text = ((FillInQuestion) element).answer;
+            answer.answer_text = fillInQuestion.answer;
             answer.blank_id = blankId;
             canvasQuizQuestion.answers.add(answer);
           }
@@ -77,8 +75,8 @@ public class CanvasQuizQuestion {
 
   private static QuestionType getQuestionType(TextQuestion textQuestion1) {
     for (QuestionElement element : textQuestion1.elements) {
-      if (element instanceof MultipleChoiceQuestion) {
-        if(((MultipleChoiceQuestion) element).isMultiAnswer){
+      if (element instanceof MultipleChoiceQuestion question) {
+        if(question.isMultiAnswer){
           return QuestionType.multiple_answers_question;
         } else {
           return QuestionType.multiple_choice_question;
