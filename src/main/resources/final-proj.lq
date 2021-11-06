@@ -1,0 +1,39 @@
+{"quizspec":"cpe390.qspec", "name":"Demo org.liquiz.parser.Quiz"}
+{"style":"def", "name":"interest", "values":"1-Most Interesting,2,3,4,5,6,7,8,9 - Least Interesting"}
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Investment Portfolio Simulator
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Quiz Designer
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Elevator Simulator
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Appointment Calendar
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Digital Circuit Simulator
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Virtual Orrery
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Checkers (for real this time)
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Document Management System
+$def:interest:$
+---
+{"style":"text", "name":"Data Types", "points":"1"}
+Meme Generator
+$def:interest:$
+---

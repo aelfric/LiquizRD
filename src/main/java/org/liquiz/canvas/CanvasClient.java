@@ -30,7 +30,7 @@ public class CanvasClient {
 
     InputStream resourceAsStream = CanvasClient.class
         .getClassLoader()
-        .getResourceAsStream("data-types.lq");
+        .getResourceAsStream("short-answer.lq");
 
     String text = new BufferedReader(
         new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8))

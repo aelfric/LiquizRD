@@ -12,7 +12,7 @@ public class PredefinedMultipleChoice extends ChoiceQuestion implements Question
       String sequence,
       Map<String, Definition> definitions) {
 
-    final Pattern compile = Pattern.compile("\\$def:([^:]+):([^$]+)\\$");
+    final Pattern compile = Pattern.compile("\\$def:([^:]+):([^$]*)\\$");
     final Matcher matcher = compile.matcher(sequence);
     if (matcher.find()) {
       this.choices = definitions.get(matcher.group(1)).values;

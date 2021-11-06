@@ -1,0 +1,50 @@
+{"quizspec":"cpe390.qspec", "name":"Demo org.liquiz.parser.Quiz"}
+{"style":"def", "name":"likert", "values":"Strongly Disagree,Disagree,Undecided,Agree,Strongly Agree"}
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+Overall course delivery is effective at conveying the course topics.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+Weekly reading materials are useful in understanding the course topics.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+Homework assignments are useful in understanding the course topics.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+Quizzes are useful in understanding the course topics.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+Discussion threads are useful in understanding the course topics.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+Instructor is approachable outside of class and able to satisfactorily address questions.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+As a result of taking this course, I feel I have a good grasp of 2D Graphics in Processing.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+As a result of taking this course, I feel I have a good grasp of data types and control flow in Java.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+As a result of taking this course, I feel I have a good grasp of functions and recursion.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+As a result of taking this course, I feel I have a good grasp of input and output in Processing and Java.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+As a result of taking this course, I feel I have a good grasp of collections and iterators.
+$def:likert:$
+---
+{"style":"text", "name":"Data Types", "points":"5"}
+As a result of taking this course, I feel I have a good grasp of objects, classes, inheritance and interfaces.
+$def:likert:$

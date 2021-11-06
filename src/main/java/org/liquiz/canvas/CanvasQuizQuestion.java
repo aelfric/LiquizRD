@@ -46,6 +46,9 @@ public class CanvasQuizQuestion {
           canvasQuizQuestion.answers.add(answer);
         }
       }
+      case essay_question ->  {
+        canvasQuizQuestion.question_text = question.questionText;
+      }
       case fill_in_multiple_blanks_question -> {
         int i = 1;
         final StringBuilder questionText = new StringBuilder();
@@ -82,6 +85,8 @@ public class CanvasQuizQuestion {
         }
       } else if (element instanceof PredefinedMultipleChoice) {
         return QuestionType.multiple_answers_question;
+      } else if (element instanceof LongTextQuestion){
+        return QuestionType.essay_question;
       } else {
         if (element instanceof FillInQuestion) {
           return QuestionType.fill_in_multiple_blanks_question;

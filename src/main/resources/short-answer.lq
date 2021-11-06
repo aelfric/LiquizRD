@@ -1,0 +1,7 @@
+{"quizspec":"cpe390.qspec", "name":"Demo Quiz"}
+{"style":"def", "name":"types", "values":"byte,char,short,int,long,float,double,boolean,void"}
+---
+{"style":"text", "name":"Write a Function", "points":"10"}
+Which of the following is a mammal?
+$tar:$
+---
